@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Accounts;
 use App\Models\User;
 use App\Models\Vehicles;
+use App\Models\Phones;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;

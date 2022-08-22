@@ -27,7 +27,7 @@
                                 <input type="text" name="rfid" placeholder="Scan RFID Card" class="form-control input-default" autofocus required>
                             </div>
                             <div class="form-group">
-                                <input type="number" name="pin" placeholder="First Pin" class="form-control input-default" required>
+                                <input type="password" name="pin" placeholder="First Pin" class="form-control input-default" required>
                             </div>
                             <div class="form-group">
                                 <button class="btn btn-primary btn-block" type="submit"> Add Card </button>

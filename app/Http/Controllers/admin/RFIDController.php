@@ -7,9 +7,13 @@ use App\Models\Accounts;
 use App\Models\Rfids;
 use App\Models\Tolfees;
 use App\Models\Transactions;
+use App\Models\Phones;
+use App\Models\Vehicles;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Twilio\Rest\Client;
+use Mail;
 
 class RFIDController extends Controller
 {
@@ -25,8 +29,6 @@ class RFIDController extends Controller
         if(is_null($rfid)){
             return redirect()->back()->with('error', 'ID not registered, please try again!');
         }
-
-        //dd($rfid);
 
         $account = User::join('accounts', 'accounts.user_id', '=', 'users.id')
             ->join('vehicles', 'vehicles.user_id', '=', 'users.id')
@@ -44,10 +46,43 @@ class RFIDController extends Controller
         }
 
 
-        return view('pin',[
-            'account' => $account,
-            'fee' => $fee
-        ]);
+        if($account->balance < $fee->amount){
+            return redirect()->route('scan')->with('error', 'You have insuffient funds in your card!');
+        }
+
+        $trans = new Transactions();
+        $trans->user_id = $account->id;
+        $trans->action = "tolgate";
+        $trans->reference = "tol".now();
+        $trans->amount =$fee->amount;
+        $trans->status = "successful";
+        $trans->balance = $account->balance - $fee->amount;
+        $trans->save();
+
+        $acc = Accounts::where('user_id', $account->id)->first();
+        $acc->balance = $acc->balance - $fee->amount;
+        $acc->save();
+
+        /* 
+            SMS
+        */
+
+        $veh = Vehicles::where('user_id', $account->id)->first();
+        
+        //$receiverNumber = $phone->number;
+        $message = "You have successfully paid tolgate amount $".$fee->amount." for vehicle identified as ".$veh->name." reg number: ".$veh->regnum." at ".now();
+
+        $details = [
+
+            'title' => 'Mail From Tolgate App',
+    
+            'body' => $message
+    
+        ];
+        \Mail::to($account->email)->send(new \App\Mail\MyTestMail($details));
+
+        return redirect()->back()->with('success', 'Successfully paid tolgate fees');
+        
     }
 
     public function pin(Request $request)

@@ -35,7 +35,7 @@
                 <input type="hidden" name="amount" value="{{ $fee->amount }}" required>
                 <input type="hidden" name="user_id" value="{{ $account->id }}" required>
                 <input type="number" name="pin" placeholder="Enter Pin" class="form-control form-control-sm mb-5"  autofocus required>
-                <button type="button" class="btn btn-success">Authorize</button>
+                <button type="submit" class="btn btn-success">Authorize</button>
             </form>
 
         </div>

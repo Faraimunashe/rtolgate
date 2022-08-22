@@ -28,7 +28,7 @@
     <link href="{{ asset('assets/css/style.css')}}" rel="stylesheet">
 </head>
 
-<body class="bg-primary">
+<body class="" style="background-image: url('{{asset('assets/images/www.jpeg')}}');">
 
     <div class="unix-login">
         <div class="container-fluid">
