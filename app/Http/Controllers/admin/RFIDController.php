@@ -9,6 +9,7 @@ use App\Models\Tolfees;
 use App\Models\Transactions;
 use App\Models\Phones;
 use App\Models\Vehicles;
+use App\Models\Blocks;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -30,6 +31,12 @@ class RFIDController extends Controller
             return redirect()->back()->with('error', 'ID not registered, please try again!');
         }
 
+        $blocks = Blocks::where('rfid_id', $rfid->id)->first();
+
+        if(!is_null($blocks)){
+            return redirect()->back()->with('error', 'This car is stolen, you will not pass!');
+        }
+
         $account = User::join('accounts', 'accounts.user_id', '=', 'users.id')
             ->join('vehicles', 'vehicles.user_id', '=', 'users.id')
             ->where('users.id', $rfid->user_id)
@@ -47,7 +54,7 @@ class RFIDController extends Controller
 
 
         if($account->balance < $fee->amount){
-            return redirect()->route('scan')->with('error', 'You have insuffient funds in your card!');
+            return redirect()->back()->with('error', 'You have insuffient funds in your card!');
         }
 
         $trans = new Transactions();

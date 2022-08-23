@@ -37,6 +37,8 @@ Route::group(['middleware' => ['auth', 'role:admin']], function () {
 
     Route::get('/admin/card/{id}', 'App\Http\Controllers\admin\DashboardController@card')->name('admin-card');
     Route::post('/admin/add/card', 'App\Http\Controllers\admin\DashboardController@add_card')->name('admin-add-card');
+    Route::get('/admin/block/{id}', 'App\Http\Controllers\admin\DashboardController@block')->name('admin-block');
+    Route::get('/admin/unblock/{id}', 'App\Http\Controllers\admin\DashboardController@unblock')->name('admin-unblock');
 
     Route::get('/admin/exempt/{id}', 'App\Http\Controllers\admin\DashboardController@add_exempt')->name('admin-exempt');
     Route::get('/admin/remove-exempt/{id}', 'App\Http\Controllers\admin\DashboardController@remove_exempt')->name('admin-romove-exempt');

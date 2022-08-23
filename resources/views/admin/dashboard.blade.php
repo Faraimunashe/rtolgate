@@ -81,6 +81,20 @@
                                                         Exempt
                                                     </a>
                                                 @endif
+                                                @php
+                                                    $blocked = \App\Models\Blocks::where('user_id', $item->id)->first();
+                                                @endphp
+                                                @if (is_null($blocked))
+                                                    <a href="{{ route('admin-block', $item->id) }}" class="btn btn-secondary btn-flat btn-addon m-b-10 m-l-5">
+                                                        <i class="ti-unlink"></i>
+                                                        Block
+                                                    </a>
+                                                @else
+                                                    <a href="{{ route('admin-unblock', $item->id) }}" class="btn btn-secondary btn-flat btn-addon m-b-10 m-l-5">
+                                                        <i class="ti-link"></i>
+                                                        Unblock
+                                                    </a>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach

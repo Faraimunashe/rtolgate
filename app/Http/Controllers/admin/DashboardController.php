@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Rfids;
 use App\Models\User;
 use App\Models\Vehicles;
+use App\Models\Blocks;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -106,5 +107,32 @@ class DashboardController extends Controller
         $veh->save();
 
         return redirect()->back()->with('success', 'Successfully removed exemption');
+    }
+
+    public function block($user_id)
+    {
+        $card = Rfids::where('user_id', $user_id)->first();
+        if(is_null($card)){
+            return redirect()->back()->with('error', 'No card card found!');
+        }
+        $block = new Blocks();
+        $block->rfid_id = $card->id;
+        $block->status = "Blocked";
+        $block->save();
+
+        return redirect()->back()->with('success', 'Successfully blocked card');
+    }
+
+    public function unblock($user_id)
+    {
+        $card = Rfids::where('user_id', $user_id)->first();
+        if(is_null($card)){
+            return redirect()->back()->with('error', 'No card card found!');
+        }
+
+        $block = Blocks::where('rfid_id', $card->id)->first();
+        $block->delete();
+
+        return redirect()->back()->with('success', 'Successfully unblocked card');
     }
 }
